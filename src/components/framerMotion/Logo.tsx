@@ -4,12 +4,12 @@ const icon = {
   hidden: {
     opacity: 0,
     pathLength: 0,
-    fill: "rgba(255, 255, 255, 0)",
+    fill: "#72d7f0",
   },
   visible: {
     opacity: 1,
     pathLength: 1,
-    fill: "rgba(255, 255, 255, 1)",
+    fill: "#72d7f0",
   },
 };
 
@@ -44,8 +44,8 @@ const Logo = () => (
         transition={{
           default: { duration: 2, ease: "easeInOut" },
         }}
-        fill="none"
-        stroke="#fff"
+        fill="#72d7f0"
+        stroke="#72d7f0"
         strokeWidth="3"
         rx="5"
       />
@@ -60,8 +60,8 @@ const Logo = () => (
         transition={{
           default: { duration: 2, ease: "easeInOut" },
         }}
-        fill="none"
-        stroke="#fff"
+        fill="#72d7f0"
+        stroke="#72d7f0"
         strokeWidth="3"
         rx="5"
       />
@@ -76,8 +76,8 @@ const Logo = () => (
         transition={{
           default: { duration: 2, ease: "easeInOut" },
         }}
-        fill="none"
-        stroke="#fff"
+        fill="#72d7f0"
+        stroke="#72d7f0"
         strokeWidth="3"
         rx="5"
       />
