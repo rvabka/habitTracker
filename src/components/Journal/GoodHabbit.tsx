@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import Popup from "reactjs-popup";
 import { FaBrain } from "react-icons/fa";

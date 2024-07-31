@@ -21,8 +21,8 @@ const Logo = () => (
       justifyContent: "center",
       alignItems: "center",
       height: "50px",
-      width: "50px", 
-      backgroundColor: "#333", 
+      width: "50px",
+      backgroundColor: "#333",
       borderRadius: "10px",
     }}
   >
@@ -44,7 +44,7 @@ const Logo = () => (
         transition={{
           default: { duration: 2, ease: "easeInOut" },
         }}
-        fill="#72d7f0"
+        fill="none"
         stroke="#72d7f0"
         strokeWidth="3"
         rx="5"
@@ -60,7 +60,7 @@ const Logo = () => (
         transition={{
           default: { duration: 2, ease: "easeInOut" },
         }}
-        fill="#72d7f0"
+        fill="none"
         stroke="#72d7f0"
         strokeWidth="3"
         rx="5"
@@ -76,7 +76,7 @@ const Logo = () => (
         transition={{
           default: { duration: 2, ease: "easeInOut" },
         }}
-        fill="#72d7f0"
+        fill="none"
         stroke="#72d7f0"
         strokeWidth="3"
         rx="5"

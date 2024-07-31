@@ -15,8 +15,8 @@ export default function BadHabbit() {
         <GoNoEntry size={30} />
       </button>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
-        <div className="modal">
-          <a className="close" onClick={closeModal}>
+        <div className="">
+          <a className="" onClick={closeModal}>
             &times;
           </a>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae magni

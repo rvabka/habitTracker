@@ -6,9 +6,11 @@ import Journal from "./components/Journal/Journal";
 import Progress from "./components/Progress";
 import Challanges from "./components/Challanges";
 import Settings from "./components/Settings";
+import { HabitProvider } from "./components/context/habitContext";
 
 function App() {
   return (
+    <HabitProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Journal />} />
@@ -17,6 +19,7 @@ function App() {
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
+    </HabitProvider>
   );
 }
 
