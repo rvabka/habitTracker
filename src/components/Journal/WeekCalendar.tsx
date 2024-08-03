@@ -40,7 +40,7 @@ export default function WeekCalendar() {
 
   const handleClick = (day: Date) => {
     const newPrams = new URLSearchParams();
-    newPrams.append("date", day.toString());
+    newPrams.append("date", day.toDateString());
     setSearchParams(newPrams);
   };
 
@@ -51,11 +51,11 @@ export default function WeekCalendar() {
           <button
             onClick={() => handleClick(day)}
             key={index}
-            className="day flex size-16 cursor-pointer flex-col items-center justify-center rounded-md bg-babyBlue p-2 text-center text-first transition duration-200 hover:scale-105 sm:size-12"
+            className="day flex size-16 cursor-pointer items-center justify-center rounded-md bg-babyBlue p-2 text-center text-first transition duration-200 hover:scale-105 sm:size-12"
           >
-            {day.toLocaleDateString("en-US", {
-              weekday: "short",
+            {day.toLocaleDateString("en-GB", {
               day: "numeric",
+              weekday: "short",
               month: "numeric",
             })}
           </button>

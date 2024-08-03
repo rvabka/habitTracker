@@ -6,7 +6,7 @@ import Journal from "./components/Journal/Journal";
 import Progress from "./components/Progress";
 import Challanges from "./components/Challanges";
 import Settings from "./components/Settings";
-import { HabitProvider } from "./components/context/habitContext";
+import { HabitProvider } from "./components/context/HabitContext";
 
 function App() {
   return (
