@@ -47,19 +47,24 @@ export default function WeekCalendar() {
   return (
     <div className="week-calendar absolute bottom-[4.4rem] flex w-full flex-col items-center justify-center bg-second p-4 text-white sm:p-2 sm:text-sm">
       <div className="week-header text-md mb-4 flex gap-3 sm:gap-2">
-        {daysOfWeek.map((day, index) => (
-          <button
-            onClick={() => handleClick(day)}
-            key={index}
-            className="day flex size-16 cursor-pointer items-center justify-center rounded-md bg-babyBlue p-2 text-center text-first transition duration-200 hover:scale-105 sm:size-12"
-          >
-            {day.toLocaleDateString("en-GB", {
-              day: "numeric",
-              weekday: "short",
-              month: "numeric",
-            })}
-          </button>
-        ))}
+        {daysOfWeek.map((day, index) => {
+          const isToday: boolean =
+            day.toLocaleDateString() === new Date().toLocaleDateString();
+            console.log(isToday)
+          return (
+            <button
+              onClick={() => handleClick(day)}
+              key={index}
+              className={`day flex size-16 cursor-pointer items-center justify-center rounded-md bg-first p-2 text-center transition duration-200 hover:scale-105 sm:size-12 ${isToday ? "text-babyBlue hover:shadow-md hover:shadow-babyBlue" : null}`}
+            >
+              {day.toLocaleDateString("en-GB", {
+                day: "numeric",
+                weekday: "short",
+                month: "numeric",
+              })}
+            </button>
+          );
+        })}
       </div>
       <div className="flex w-full items-center justify-center gap-3 sm:flex sm:gap-2">
         <button

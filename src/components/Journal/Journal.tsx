@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import BadHabbit from "./BadHabit";
 import GoodHabbit from "./GoodHabit";
 import WeekCalendar from "./WeekCalendar";
+import JournalDetails from "./JounralDetails";
 
 export default function Journal() {
   const location = useLocation();
@@ -10,13 +11,13 @@ export default function Journal() {
 
   function getStringFromDate(): string | undefined {
     switch (calculateCurrentDate()) {
-      case "0":
+      case "2":
         return "Tomorrow";
-      case "-1":
+      case "1":
         return "Today";
-      case "-2":
+      case "0":
         return "Yesterday";
-      case "-3":
+      case "-1":
         return "Day before yesterday";
       default:
         return calculateCurrentDate();
@@ -44,10 +45,10 @@ export default function Journal() {
 
     const timeDifference: number = time2 - time1;
     const millisecondsInOneDay: number = 24 * 60 * 60 * 1000;
-    const dayDifference: string = Math.round(
-      timeDifference / millisecondsInOneDay,
+    const dayDifference: string = Math.ceil(
+      timeDifference / millisecondsInOneDay + 1,
     ).toString();
-    return parseInt(dayDifference) >= -3 && parseInt(dayDifference) <= 0
+    return parseInt(dayDifference) >= -1 && parseInt(dayDifference) <= 2
       ? dayDifference
       : formatDate(stripedCallendarDate);
   }
@@ -60,6 +61,9 @@ export default function Journal() {
           <BadHabbit />
           <GoodHabbit />
         </div>
+      </div>
+      <div className="flex justify-center items-center flex-col h-[65%] bg-first">
+        <JournalDetails />
       </div>
       <WeekCalendar />
     </div>

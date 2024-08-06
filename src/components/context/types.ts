@@ -5,7 +5,6 @@ export interface Habit {
   date: string;
   goal: string;
   reminder: string;
-  repeat: string;
 }
 
 export interface State {
