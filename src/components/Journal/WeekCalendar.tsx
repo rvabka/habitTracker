@@ -50,7 +50,6 @@ export default function WeekCalendar() {
         {daysOfWeek.map((day, index) => {
           const isToday: boolean =
             day.toLocaleDateString() === new Date().toLocaleDateString();
-            console.log(isToday)
           return (
             <button
               onClick={() => handleClick(day)}

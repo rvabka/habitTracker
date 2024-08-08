@@ -5,13 +5,20 @@ export interface Habit {
   date: string;
   goal: string;
   reminder: string;
+  count: number;
+  presentCount: number;
 }
 
 export interface State {
   habits: Habit[];
 }
 
-export interface Action {
-  type: "ADD_HABIT";
-  payload: Habit;
-}
+export type Action =
+  | { type: "ADD_HABIT"; payload: Habit }
+  | {
+      type: "UPDATE_PRESENT_COUNT";
+      payload: { id: string; presentCount: number };
+    }
+  | { type: "SET_DATA"; payload: Habit[] }
+  | { type: "ADD_DATA"; payload: Habit } 
+  | { type: "DELETE_HABIT"; payload: string };
