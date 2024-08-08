@@ -16,7 +16,7 @@ export default function BadHabit() {
     date: "",
     goal: "",
     reminder: "",
-    count: 0,
+    count: 1,
     presentCount: 0,
   });
   const closeModal = () => {
@@ -26,7 +26,7 @@ export default function BadHabit() {
       date: "",
       goal: "",
       reminder: "",
-      count: 0,
+      count: 1,
       presentCount: 0,
     });
   };
@@ -56,15 +56,13 @@ export default function BadHabit() {
     };
 
     await addHabitAction(newHabit, dispatch);
-    dispatch({ type: "ADD_HABIT", payload: newHabit });
 
-    // Resetuje pola formularza
     setFormState({
       name: "",
       date: "",
       goal: "",
       reminder: "",
-      count: 0,
+      count: 1,
       presentCount: 0,
     });
     closeModal();

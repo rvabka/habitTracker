@@ -72,9 +72,7 @@ export default function BadHabit() {
     };
 
     await addHabitAction(newHabit, dispatch);
-    dispatch({ type: "ADD_HABIT", payload: newHabit });
 
-    // Resetuje pola formularza
     setFormState({
       name: "",
       date: "",

@@ -6,6 +6,11 @@ export default function WeekCalendar() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const clickedDate: string | null = searchParams.get("date");
+  const clickedDateDate: Date | null = clickedDate
+    ? new Date(clickedDate)
+    : null;
+
   const getStartOfWeek = (date: Date): Date => {
     const startOfWeek = new Date(date);
     const day = startOfWeek.getDay();
@@ -50,11 +55,13 @@ export default function WeekCalendar() {
         {daysOfWeek.map((day, index) => {
           const isToday: boolean =
             day.toLocaleDateString() === new Date().toLocaleDateString();
+          const clickedDay: boolean =
+            clickedDateDate?.toLocaleDateString() === day.toLocaleDateString();
           return (
             <button
               onClick={() => handleClick(day)}
               key={index}
-              className={`day flex size-16 cursor-pointer items-center justify-center rounded-md bg-first p-2 text-center transition duration-200 hover:scale-105 sm:size-12 ${isToday ? "text-babyBlue hover:shadow-md hover:shadow-babyBlue" : null}`}
+              className={`day flex size-16 cursor-pointer items-center justify-center rounded-md bg-first p-2 text-center transition duration-200 hover:scale-105 sm:size-12 ${isToday ? "text-babyBlue hover:shadow-md hover:shadow-babyBlue" : null} ${clickedDay ? "shadow-md shadow-babyBlue" : null}`}
             >
               {day.toLocaleDateString("en-GB", {
                 day: "numeric",

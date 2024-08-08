@@ -14,7 +14,6 @@ export interface State {
 }
 
 export type Action =
-  | { type: "ADD_HABIT"; payload: Habit }
   | {
       type: "UPDATE_PRESENT_COUNT";
       payload: { id: string; presentCount: number };

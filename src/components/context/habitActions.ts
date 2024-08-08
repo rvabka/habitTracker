@@ -11,7 +11,7 @@ export const addHabit = async (
   dispatch: React.Dispatch<Action>,
 ) => {
   const habitWithId = await addHabitToFirestore(habit as Habit);
-  dispatch({ type: "ADD_HABIT", payload: habitWithId });
+  dispatch({ type: "ADD_DATA", payload: habitWithId });
 };
 
 export const deleteHabit = async (
