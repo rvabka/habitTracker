@@ -51,8 +51,6 @@ export default function JournalDetails() {
     const updatedPresentCount = presentCount + 1;
     const updatedHabit = { ...habit, presentCount: updatedPresentCount };
 
-    console.log("Updating habit:", updatedHabit);
-
     dispatch({
       type: "UPDATE_PRESENT_COUNT",
       payload: { id, presentCount: updatedPresentCount },
@@ -65,7 +63,6 @@ export default function JournalDetails() {
 
     try {
       await updateHabitInFirestore(updatedHabit);
-      console.log("Habit updated successfully");
     } catch (error) {
       console.error("Error updating habit: ", error);
     }
@@ -118,7 +115,7 @@ export default function JournalDetails() {
             );
           })
         ) : (
-          <h1>There aren't planned habits for today.</h1>
+          <h1 className="text-center">There aren't planned habits for today.</h1>
         )}
       </div>
     </>

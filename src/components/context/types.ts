@@ -3,8 +3,8 @@ export interface Habit {
   id: string;
   name: string;
   date: string;
-  goal: string;
   reminder: string;
+  goal: string;
   count: number;
   presentCount: number;
 }

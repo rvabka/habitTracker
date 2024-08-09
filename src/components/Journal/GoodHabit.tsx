@@ -11,43 +11,58 @@ import { addHabit as addHabitAction } from "../context/habitActions";
 
 export default function BadHabit() {
   const [open, setOpen] = useState<boolean>(false);
-  const [formState, setFormState] = useState<Omit<Habit, "id">>({
+  const initialFormState = {
     name: "",
     date: "",
-    goal: "",
     reminder: "",
-    count: 0,
+    goal: "",
+    count: 1,
     presentCount: 0,
-  });
+  };
+  const [formState, setFormState] =
+    useState<Omit<Habit, "id">>(initialFormState);
   const closeModal = () => {
     setOpen(false);
-    setFormState({
-      name: "",
-      date: "",
-      goal: "",
-      reminder: "",
-      count: 0,
-      presentCount: 0,
-    });
+    setFormState(initialFormState);
+    setErrors({});
   };
 
+  //context
   const habitContext = useContext(HabitContext);
   if (!habitContext) {
     throw new Error("HabitContext must be used within a HabitProvider");
   }
   const { dispatch } = habitContext;
 
+  const [errors, setErrors] = useState<Partial<Habit>>({});
+
+  function validateForm(): boolean {
+    const newErrors: Partial<Habit> = {};
+    if (!formState.name) newErrors.name = "Name is required";
+    if (!formState.date) newErrors.date = "Date is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
     setFormState((prevState) => {
+      let countValue = prevState.count;
+
+      if (name === "goal") {
+        countValue = parseInt(value) || 1;
+      }
+
       if (name === "goal" || name === "goalUnit") {
         const [currentValue, currentUnit] = prevState.goal.split(" ");
         if (name === "goal") {
           return {
             ...prevState,
             goal: `${value} ${currentUnit || ""}`.trim(),
+            count: countValue,
           };
         } else {
           return {
@@ -58,7 +73,6 @@ export default function BadHabit() {
       } else {
         return {
           ...prevState,
-          count: parseInt(prevState.goal),
           [name]: value,
         };
       }
@@ -66,22 +80,16 @@ export default function BadHabit() {
   };
 
   const addHabit = async () => {
-    const newHabit: Habit = {
-      id: uuidv4(),
-      ...formState,
-    };
-
-    await addHabitAction(newHabit, dispatch);
-
-    setFormState({
-      name: "",
-      date: "",
-      goal: "",
-      reminder: "",
-      count: 0,
-      presentCount: 0,
-    });
-    closeModal();
+    if (validateForm()) {
+      const countValue = parseInt(formState.goal.split(" ")[0]) || 1; 
+      const newHabit: Habit = {
+        id: uuidv4(),
+        ...formState,
+        count: countValue,
+      };
+      await addHabitAction(newHabit, dispatch);
+      closeModal();
+    }
   };
 
   return (
@@ -106,8 +114,11 @@ export default function BadHabit() {
             <IoClose size={35} />
           </motion.button>
           <div className="flex w-full flex-col gap-y-4 p-5">
-            <label className="-mb-[0.75rem] block text-sm font-medium dark:text-white">
-              Habit name <span className="text-red-600">*</span>
+            <label className="-mb-[0.75rem] flex text-sm font-medium dark:text-white">
+              Habit name{" "}
+              <span className="ml-1 text-red-600">
+                * {errors.name && `${errors.name}`}
+              </span>
             </label>
             <select
               name="name"
@@ -125,7 +136,10 @@ export default function BadHabit() {
               ))}
             </select>
             <label className="-mb-[0.75rem] block text-sm font-medium dark:text-white">
-              Start date <span className="text-red-600">*</span>
+              Start date
+              <span className="ml-1 text-red-600">
+                * {errors.date && `${errors.date}`}
+              </span>
             </label>
             <input
               type="date"
@@ -133,6 +147,17 @@ export default function BadHabit() {
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-white focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-white dark:placeholder-white dark:focus:border-babyBlue"
               placeholder="Start date"
               value={formState.date}
+              onChange={handleInputChange}
+            />
+            <label className="-mb-[0.5rem] block text-sm font-medium dark:text-white">
+              Time
+            </label>
+            <input
+              type="time"
+              name="reminder"
+              className="relative block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-white focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-white dark:placeholder-white dark:focus:border-babyBlue"
+              placeholder="Time"
+              value={formState.reminder}
               onChange={handleInputChange}
             />
             <div className="flex flex-col items-center justify-center gap-3">
@@ -165,17 +190,6 @@ export default function BadHabit() {
                 </select>
               </div>
             </div>
-            <label className="-mb-[0.5rem] block text-sm font-medium dark:text-white">
-              Time
-            </label>
-            <input
-              type="time"
-              name="reminder"
-              className="relative block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-white focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-white dark:placeholder-white dark:focus:border-babyBlue"
-              placeholder="Time"
-              value={formState.reminder}
-              onChange={handleInputChange}
-            />
           </div>
           <button
             className="w-1/2 rounded-lg border p-2 text-white transition duration-200 hover:scale-105 hover:text-babyBlue sm:m-0"

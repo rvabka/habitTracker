@@ -11,24 +11,19 @@ import { addHabit as addHabitAction } from "../context/habitActions";
 
 export default function BadHabit() {
   const [open, setOpen] = useState<boolean>(false);
-  const [formState, setFormState] = useState<Omit<Habit, "id">>({
+  const initialFormState = {
     name: "",
     date: "",
-    goal: "",
     reminder: "",
+    goal: "",
     count: 1,
     presentCount: 0,
-  });
+  };
+  const [formState, setFormState] =
+    useState<Omit<Habit, "id">>(initialFormState);
   const closeModal = () => {
     setOpen(false);
-    setFormState({
-      name: "",
-      date: "",
-      goal: "",
-      reminder: "",
-      count: 1,
-      presentCount: 0,
-    });
+    setFormState(initialFormState);
   };
 
   const habitContext = useContext(HabitContext);
@@ -56,15 +51,7 @@ export default function BadHabit() {
     };
 
     await addHabitAction(newHabit, dispatch);
-
-    setFormState({
-      name: "",
-      date: "",
-      goal: "",
-      reminder: "",
-      count: 1,
-      presentCount: 0,
-    });
+    setFormState(initialFormState);
     closeModal();
   };
 
