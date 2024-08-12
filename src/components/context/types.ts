@@ -1,4 +1,9 @@
 // types.ts
+interface DataEntry {
+  day: string;
+  done: number;
+}
+
 export interface Habit {
   id: string;
   name: string;
@@ -7,6 +12,7 @@ export interface Habit {
   goal: string;
   count: number;
   presentCount: number;
+  data: DataEntry[];
 }
 
 export interface State {
@@ -19,5 +25,5 @@ export type Action =
       payload: { id: string; presentCount: number };
     }
   | { type: "SET_DATA"; payload: Habit[] }
-  | { type: "ADD_DATA"; payload: Habit } 
+  | { type: "ADD_DATA"; payload: Habit }
   | { type: "DELETE_HABIT"; payload: string };

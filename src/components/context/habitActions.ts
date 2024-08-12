@@ -2,7 +2,7 @@ import {
   addHabitToFirestore,
   deleteHabitFromFirestore,
   getHabitsFromFirestore,
-  updateHabitInFirestore,
+  updateCountInFirestore,
 } from "../../firebase/firebase";
 import { Habit, Action } from "./types";
 
@@ -36,7 +36,7 @@ export const updateHabit = async (
   dispatch: React.Dispatch<Action>,
 ) => {
   try {
-    await updateHabitInFirestore(habit);
+    await updateCountInFirestore(habit);
     dispatch({ type: "UPDATE_PRESENT_COUNT", payload: habit });
   } catch (e) {
     console.error("Error updating habit: ", e);

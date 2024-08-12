@@ -6,11 +6,6 @@ export const initialState: State = {
 
 export default function habitReducer(state: State, action: Action) {
   switch (action.type) {
-    case "ADD_HABIT":
-      return {
-        ...state,
-        habits: [...state.habits, action.payload],
-      };
     case "UPDATE_PRESENT_COUNT":
       return {
         ...state,

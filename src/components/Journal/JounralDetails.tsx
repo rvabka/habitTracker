@@ -5,13 +5,18 @@ import { MdOutlineDone } from "react-icons/md";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
 import { fetchHabits } from "../context/habitActions";
-import { updateHabitInFirestore } from "../../firebase/firebase";
+import {
+  updateCountInFirestore,
+  addNewDayIfNecessary,
+  updateDoneStatus,
+} from "../../firebase/firebase";
 
 export default function JournalDetails() {
+  addNewDayIfNecessary();
   const [searchData] = useSearchParams();
   const habitContext = useContext(HabitContext);
   const habitArray = habitContext?.state.habits || [];
-
+  console.log(habitArray);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const { width, height } = useWindowSize();
 
@@ -57,12 +62,28 @@ export default function JournalDetails() {
     });
 
     if (updatedPresentCount >= habit.count) {
+      const dateStr: string = searchData.get("date") || "";
+      let formattedDate: string = "";
+      if (dateStr) {
+        const date = new Date(dateStr);
+
+        if (!isNaN(date.getTime())) {
+          formattedDate = date.toLocaleDateString("en-CA");
+          console.log(formattedDate);
+        } else {
+          console.error("Incorrect data");
+        }
+      } else {
+        console.error("No data");
+      }
+      console.log(formattedDate);
+      updateDoneStatus(id, formattedDate);
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 3000);
     }
 
     try {
-      await updateHabitInFirestore(updatedHabit);
+      await updateCountInFirestore(updatedHabit);
     } catch (error) {
       console.error("Error updating habit: ", error);
     }
@@ -78,7 +99,9 @@ export default function JournalDetails() {
       <div className="w-full overflow-y-auto">
         {filteredHabits.length > 0 ? (
           filteredHabits.map((item, index: number) => {
-            const isComplete = item.presentCount >= item.count;
+            const isComplete = item.data.map((entry) => {
+              entry.day === item.date && entry.done === 0 ? 1 : 0;
+            });
             return (
               <div
                 key={item.id}
@@ -115,7 +138,9 @@ export default function JournalDetails() {
             );
           })
         ) : (
-          <h1 className="text-center">There aren't planned habits for today.</h1>
+          <h1 className="text-center">
+            There aren't planned habits for today.
+          </h1>
         )}
       </div>
     </>

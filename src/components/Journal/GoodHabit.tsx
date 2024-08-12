@@ -18,6 +18,7 @@ export default function BadHabit() {
     goal: "",
     count: 1,
     presentCount: 0,
+    data: [],
   };
   const [formState, setFormState] =
     useState<Omit<Habit, "id">>(initialFormState);
@@ -81,11 +82,12 @@ export default function BadHabit() {
 
   const addHabit = async () => {
     if (validateForm()) {
-      const countValue = parseInt(formState.goal.split(" ")[0]) || 1; 
+      const countValue = parseInt(formState.goal.split(" ")[0]) || 1;
       const newHabit: Habit = {
         id: uuidv4(),
         ...formState,
         count: countValue,
+        data: [{ day: formState.date, done: 0 }],
       };
       await addHabitAction(newHabit, dispatch);
       closeModal();
