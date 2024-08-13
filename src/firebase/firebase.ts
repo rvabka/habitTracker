@@ -45,7 +45,7 @@ export const deleteHabitFromFirestore = async (id: string) => {
 export const updateCountInFirestore = async (habit: Habit) => {
   try {
     const habitRef = doc(db, "habits", habit.id);
-    await updateDoc(habitRef, { presentCount: habit.presentCount });
+    await updateDoc(habitRef, { data: habit.data });
   } catch (error) {
     console.error("Error updating habit: ", error);
     throw error;
@@ -100,7 +100,7 @@ export const addNewDayIfNecessary = async () => {
       if (
         !updatedData.some((day: { day: string }) => day.day === currentDate)
       ) {
-        updatedData.push({ day: currentDate, done: 0 });
+        updatedData.push({ day: currentDate, done: 0, presentCount: 0 });
       }
 
       // Zaktualizowanie dokumentu w Firestore

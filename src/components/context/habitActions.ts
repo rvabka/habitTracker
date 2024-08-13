@@ -3,6 +3,7 @@ import {
   deleteHabitFromFirestore,
   getHabitsFromFirestore,
   updateCountInFirestore,
+  updateDoneStatus,
 } from "../../firebase/firebase";
 import { Habit, Action } from "./types";
 
@@ -31,14 +32,46 @@ export const fetchHabits = async (dispatch: React.Dispatch<Action>) => {
   }
 };
 
-export const updateHabit = async (
+// Funkcja aktualizująca status done i dispatchująca akcję
+export const updateDoneStatusAndDispatch = async (
+  habitId: string,
+  targetDate: string,
+  dispatch: React.Dispatch<Action>,
+) => {
+  try {
+    await updateDoneStatus(habitId, targetDate);
+    dispatch({
+      type: "UPDATE_DONE_STATUS",
+      payload: { id: habitId, targetDate },
+    });
+  } catch (error) {
+    console.error("Error updating done status: ", error);
+    throw error;
+  }
+};
+
+// Funkcja aktualizująca licznik i dispatchująca akcję
+export const updateCountAndDispatch = async (
   habit: Habit,
   dispatch: React.Dispatch<Action>,
 ) => {
   try {
     await updateCountInFirestore(habit);
-    dispatch({ type: "UPDATE_PRESENT_COUNT", payload: habit });
-  } catch (e) {
-    console.error("Error updating habit: ", e);
+    dispatch({
+      type: "UPDATE_PRESENT_COUNT",
+      payload: {
+        id: habit.id,
+        presentCount:
+          habit.data.find(
+            (entry) => entry.day === new Date().toISOString().split("T")[0],
+          )?.presentCount || 0,
+        targetDate: new Date().toISOString().split("T")[0],
+      },
+    });
+  } catch (error) {
+    console.error("Error updating count: ", error);
+    throw error;
   }
 };
+
+export { updateDoneStatus };

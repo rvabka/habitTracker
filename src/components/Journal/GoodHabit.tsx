@@ -17,7 +17,6 @@ export default function BadHabit() {
     reminder: "",
     goal: "",
     count: 1,
-    presentCount: 0,
     data: [],
   };
   const [formState, setFormState] =
@@ -28,7 +27,6 @@ export default function BadHabit() {
     setErrors({});
   };
 
-  //context
   const habitContext = useContext(HabitContext);
   if (!habitContext) {
     throw new Error("HabitContext must be used within a HabitProvider");
@@ -87,7 +85,13 @@ export default function BadHabit() {
         id: uuidv4(),
         ...formState,
         count: countValue,
-        data: [{ day: formState.date, done: 0 }],
+        data: [
+          {
+            day: formState.date,
+            done: 0,
+            presentCount: 0,
+          },
+        ],
       };
       await addHabitAction(newHabit, dispatch);
       closeModal();

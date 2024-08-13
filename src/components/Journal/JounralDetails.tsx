@@ -16,10 +16,9 @@ export default function JournalDetails() {
   const [searchData] = useSearchParams();
   const habitContext = useContext(HabitContext);
   const habitArray = habitContext?.state.habits || [];
-  console.log(habitArray);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const { width, height } = useWindowSize();
-
+  
   const filteredHabits = habitArray.filter((item) => {
     const presentData = searchData.get("date") || new Date();
     const dateObj1 = new Date(presentData);
@@ -41,6 +40,20 @@ export default function JournalDetails() {
     fetchHabits(dispatch);
   }, [dispatch]);
 
+  const dateStr: string = searchData.get("date") || "";
+  let formattedDate: string = "";
+  if (dateStr) {
+    const date = new Date(dateStr);
+
+    if (!isNaN(date.getTime())) {
+      formattedDate = date.toLocaleDateString("en-CA");
+    } else {
+      console.error("Incorrect data");
+    }
+  } else {
+    console.error("No data");
+  }
+
   const handleChangeCount = async (id: string, presentCount: number) => {
     const habit = state.habits.find((habit) => habit.id === id);
 
@@ -49,44 +62,46 @@ export default function JournalDetails() {
       return;
     }
 
-    if (habit.presentCount >= habit.count) {
+    const todayEntryIndex = habit.data.findIndex(
+      (entry) => entry.day === formattedDate,
+    );
+
+    if (todayEntryIndex === -1) {
+      console.error("Today's entry not found in habit data");
       return;
     }
 
-    const updatedPresentCount = presentCount + 1;
-    const updatedHabit = { ...habit, presentCount: updatedPresentCount };
+    // Zaktualizuj presentCount
+    const updatedData = habit.data.map((entry, index) =>
+      index === todayEntryIndex
+        ? { ...entry, presentCount: presentCount + 1, done: entry.done }
+        : entry,
+    );
 
-    dispatch({
-      type: "UPDATE_PRESENT_COUNT",
-      payload: { id, presentCount: updatedPresentCount },
-    });
+    // Sprawdź, czy osiągnięto cel
+    let newPresentCount = updatedData[todayEntryIndex].presentCount;
+    if (newPresentCount >= habit.count) {
+      newPresentCount = 0;
+      updatedData[todayEntryIndex].done = 1;
 
-    if (updatedPresentCount >= habit.count) {
-      const dateStr: string = searchData.get("date") || "";
-      let formattedDate: string = "";
-      if (dateStr) {
-        const date = new Date(dateStr);
-
-        if (!isNaN(date.getTime())) {
-          formattedDate = date.toLocaleDateString("en-CA");
-          console.log(formattedDate);
-        } else {
-          console.error("Incorrect data");
-        }
-      } else {
-        console.error("No data");
-      }
-      console.log(formattedDate);
-      updateDoneStatus(id, formattedDate);
+      dispatch({
+        type: "UPDATE_DONE_STATUS",
+        payload: { id, targetDate: formattedDate },
+      });
+      await updateDoneStatus(id, formattedDate);
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 3000);
     }
 
-    try {
-      await updateCountInFirestore(updatedHabit);
-    } catch (error) {
-      console.error("Error updating habit: ", error);
-    }
+    dispatch({
+      type: "UPDATE_PRESENT_COUNT",
+      payload: {
+        id,
+        presentCount: newPresentCount,
+        targetDate: formattedDate,
+      },
+    });
+    await updateCountInFirestore({ ...habit, data: updatedData });
   };
 
   return (
@@ -99,9 +114,13 @@ export default function JournalDetails() {
       <div className="w-full overflow-y-auto">
         {filteredHabits.length > 0 ? (
           filteredHabits.map((item, index: number) => {
-            const isComplete = item.data.map((entry) => {
-              entry.day === item.date && entry.done === 0 ? 1 : 0;
-            });
+            const isComplete = item.data.some(
+              (entry) => entry.day === formattedDate && entry.done === 1,
+            );
+            const todayEntry = item.data.find(
+              (entry) => entry.day === formattedDate,
+            );
+
             return (
               <div
                 key={item.id}
@@ -114,21 +133,26 @@ export default function JournalDetails() {
                   className={`flex w-full flex-col items-center justify-center`}
                 >
                   <h1
-                    className={`text-lg font-bold ${isComplete ? "italic line-through" : null}`}
+                    className={`text-lg font-bold ${isComplete ? "italic line-through" : ""}`}
                   >
                     {item.name}
                   </h1>
                   <p
                     className={`font-thin ${isComplete ? "text-green-500" : "text-red-500"} `}
                   >
-                    {item.presentCount} / {item.count}
+                    {isComplete
+                      ? "Habit completed for today"
+                      : todayEntry
+                        ? todayEntry.presentCount + " / " + item.count
+                        : "No data for today"}
                   </p>
                 </div>
                 <div>
                   <button
                     className={`flex flex-col items-center justify-center rounded-full bg-second p-3 text-white transition duration-200 hover:scale-105 hover:text-babyBlue ${isComplete ? "cursor-not-allowed" : "cursor-pointer"}`}
                     onClick={() =>
-                      handleChangeCount(item.id, item.presentCount)
+                      !isComplete &&
+                      handleChangeCount(item.id, todayEntry?.presentCount ?? 0)
                     }
                   >
                     <MdOutlineDone size={25} />
