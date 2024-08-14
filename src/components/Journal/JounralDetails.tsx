@@ -4,21 +4,21 @@ import { useSearchParams } from "react-router-dom";
 import { MdOutlineDone } from "react-icons/md";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
-import { fetchHabits } from "../context/habitActions";
+import { BallTriangle } from "react-loader-spinner";
 import {
   updateCountInFirestore,
-  addNewDayIfNecessary,
   updateDoneStatus,
+  getHabitsFromFirestore,
 } from "../../firebase/firebase";
 
 export default function JournalDetails() {
-  addNewDayIfNecessary();
   const [searchData] = useSearchParams();
   const habitContext = useContext(HabitContext);
   const habitArray = habitContext?.state.habits || [];
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const { width, height } = useWindowSize();
-  
+
+  console.log(habitArray);
   const filteredHabits = habitArray.filter((item) => {
     const presentData = searchData.get("date") || new Date();
     const dateObj1 = new Date(presentData);
@@ -37,7 +37,18 @@ export default function JournalDetails() {
   const { state, dispatch } = habitContext;
 
   useEffect(() => {
-    fetchHabits(dispatch);
+    const loadHabits = async () => {
+      dispatch({ type: "SET_LOADING", payload: true });
+      try {
+        const habits = await getHabitsFromFirestore();
+        dispatch({ type: "SET_DATA", payload: habits });
+      } catch (error) {
+        console.error("Error fetching habits: ", error);
+      }
+    };
+
+    dispatch({ type: "SET_LOADING", payload: false });
+    loadHabits();
   }, [dispatch]);
 
   const dateStr: string = searchData.get("date") || "";
@@ -106,67 +117,87 @@ export default function JournalDetails() {
 
   return (
     <>
-      <div
-        className={`confetti-container ${showConfetti ? "fade-in" : "fade-out"}`}
-      >
-        <Confetti width={width} height={height} />
-      </div>
-      <div className="w-full overflow-y-auto">
-        {filteredHabits.length > 0 ? (
-          filteredHabits.map((item, index: number) => {
-            const isComplete = item.data.some(
-              (entry) => entry.day === formattedDate && entry.done === 1,
-            );
-            const todayEntry = item.data.find(
-              (entry) => entry.day === formattedDate,
-            );
+      {" "}
+      {state.loading ? (
+        <div className="flex h-screen w-screen flex-col items-center justify-center">
+          <BallTriangle
+            height="50"
+            width="50"
+            color="#72d7f0"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+      ) : (
+        <>
+          <div
+            className={`confetti-container ${showConfetti ? "fade-in" : "fade-out"}`}
+          >
+            <Confetti width={width} height={height} />
+          </div>
+          <div className="w-full overflow-y-auto">
+            {filteredHabits.length > 0 ? (
+              filteredHabits.map((item, index: number) => {
+                const isComplete = item.data.some(
+                  (entry) => entry.day === formattedDate && entry.done === 1,
+                );
+                const todayEntry = item.data.find(
+                  (entry) => entry.day === formattedDate,
+                );
 
-            return (
-              <div
-                key={item.id}
-                className="flex w-full items-center justify-around border-y-[0.1rem] border-y-second p-2 py-4"
-              >
-                <div className="text-center text-lg">
-                  <h1>{index + 1}</h1>
-                </div>
-                <div
-                  className={`flex w-full flex-col items-center justify-center`}
-                >
-                  <h1
-                    className={`text-lg font-bold ${isComplete ? "italic line-through" : ""}`}
+                return (
+                  <div
+                    key={item.id}
+                    className="flex w-full items-center justify-around border-y-[0.1rem] border-y-second p-2 py-4"
                   >
-                    {item.name}
-                  </h1>
-                  <p
-                    className={`font-thin ${isComplete ? "text-green-500" : "text-red-500"} `}
-                  >
-                    {isComplete
-                      ? "Habit completed for today"
-                      : todayEntry
-                        ? todayEntry.presentCount + " / " + item.count
-                        : "No data for today"}
-                  </p>
-                </div>
-                <div>
-                  <button
-                    className={`flex flex-col items-center justify-center rounded-full bg-second p-3 text-white transition duration-200 hover:scale-105 hover:text-babyBlue ${isComplete ? "cursor-not-allowed" : "cursor-pointer"}`}
-                    onClick={() =>
-                      !isComplete &&
-                      handleChangeCount(item.id, todayEntry?.presentCount ?? 0)
-                    }
-                  >
-                    <MdOutlineDone size={25} />
-                  </button>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <h1 className="text-center">
-            There aren't planned habits for today.
-          </h1>
-        )}
-      </div>
+                    <div className="text-center text-lg">
+                      <h1>{index + 1}</h1>
+                    </div>
+                    <div
+                      className={`flex w-full flex-col items-center justify-center`}
+                    >
+                      <h1
+                        className={`text-lg font-bold ${isComplete ? "italic line-through" : ""}`}
+                      >
+                        {item.name}
+                      </h1>
+                      <p
+                        className={`font-thin ${isComplete ? "text-green-500" : "text-red-500"} `}
+                      >
+                        {isComplete
+                          ? "Habit completed for today"
+                          : todayEntry
+                            ? todayEntry.presentCount + " / " + item.count
+                            : "Come back another day"}
+                      </p>
+                    </div>
+                    <div>
+                      <button
+                        className={`flex flex-col items-center justify-center rounded-full bg-second p-3 text-white transition duration-200 hover:scale-105 hover:text-babyBlue ${isComplete ? "cursor-not-allowed" : "cursor-pointer"}`}
+                        onClick={() =>
+                          !isComplete &&
+                          handleChangeCount(
+                            item.id,
+                            todayEntry?.presentCount ?? 0,
+                          )
+                        }
+                      >
+                        <MdOutlineDone size={25} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <h1 className="text-center">
+                There aren't planned habits for today.
+              </h1>
+            )}
+          </div>
+        </>
+      )}
     </>
   );
 }

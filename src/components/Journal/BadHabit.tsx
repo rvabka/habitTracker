@@ -7,7 +7,7 @@ import { badHabit } from "../data/habitOptions";
 import { v4 as uuidv4 } from "uuid";
 import { HabitContext } from "../context/HabitContext";
 import { Habit } from "../context/types";
-import { addHabit as addHabitAction } from "../context/habitActions";
+import { addHabitToFirestore } from "../../firebase/firebase";
 
 export default function BadHabit() {
   const [open, setOpen] = useState<boolean>(false);
@@ -17,7 +17,7 @@ export default function BadHabit() {
     reminder: "",
     goal: "",
     count: 1,
-    presentCount: 0,
+    data: [],
   };
   const [formState, setFormState] =
     useState<Omit<Habit, "id">>(initialFormState);
@@ -50,7 +50,11 @@ export default function BadHabit() {
       ...formState,
     };
 
-    await addHabitAction(newHabit, dispatch);
+    dispatch({
+      type: "ADD_DATA",
+      payload: newHabit,
+    });
+    await addHabitToFirestore(newHabit);
     setFormState(initialFormState);
     closeModal();
   };

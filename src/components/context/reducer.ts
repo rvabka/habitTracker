@@ -2,6 +2,7 @@ import { State, Action } from "./types";
 
 export const initialState: State = {
   habits: [],
+  loading: false,
 };
 
 export default function habitReducer(state: State, action: Action) {
@@ -14,9 +15,7 @@ export default function habitReducer(state: State, action: Action) {
         habits: state.habits.map((habit) => {
           if (habit.id === id) {
             const updatedData = habit.data.map((entry) =>
-              entry.day === targetDate
-                ? { ...entry, presentCount } 
-                : entry,
+              entry.day === targetDate ? { ...entry, presentCount } : entry,
             );
             return { ...habit, data: updatedData };
           }
@@ -51,6 +50,17 @@ export default function habitReducer(state: State, action: Action) {
         ...state,
         habits: state.habits.filter((habit) => habit.id !== action.payload),
       };
+    case "UPDATE_HABIT_DATA": {
+      const { id, data } = action.payload;
+      return {
+        ...state,
+        habits: state.habits.map((habit) =>
+          habit.id === id ? { ...habit, data } : habit,
+        ),
+      };
+    }
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
     default:
       return state;
   }

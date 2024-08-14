@@ -17,12 +17,13 @@ export interface Habit {
 
 export interface State {
   habits: Habit[];
+  loading: boolean;
 }
 
 export type Action =
   | {
       type: "UPDATE_PRESENT_COUNT";
-      payload: { id: string; presentCount: number, targetDate: string };
+      payload: { id: string; presentCount: number; targetDate: string };
     }
   | { type: "SET_DATA"; payload: Habit[] }
   | { type: "ADD_DATA"; payload: Habit }
@@ -30,4 +31,9 @@ export type Action =
   | {
       type: "UPDATE_DONE_STATUS";
       payload: { id: string; targetDate: string };
-    };
+    }
+  | {
+      type: "SET_LOADING";
+      payload: boolean;
+    }
+  | { type: "UPDATE_HABIT_DATA"; payload: { id: string; data: DataEntry[] } };

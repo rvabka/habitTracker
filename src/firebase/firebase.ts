@@ -9,6 +9,7 @@ import {
   setDoc,
   getDoc,
 } from "firebase/firestore";
+import { Action } from "../components/context/types";
 import { Habit } from "../components/context/types";
 
 const firebaseConfig = {
@@ -77,35 +78,46 @@ export const updateDoneStatus = async (habitId: string, targetDate: string) => {
   }
 };
 
-// Funkcja dodająca nowy dzień do każdego dokumentu
-export const addNewDayIfNecessary = async () => {
+export const addNewDayIfNecessary = async (
+  dispatch: React.Dispatch<Action>,
+) => {
   try {
-    // Pobranie wszystkich dokumentów z kolekcji "habits"
     const habitsSnapshot = await getDocs(collection(db, "habits"));
 
     const today = new Date();
-    const currentDate = today.toISOString().split("T")[0]; // Format YYYY-MM-DD
 
-    // Iteracja przez wszystkie dokumenty
     for (const habitDoc of habitsSnapshot.docs) {
       const habitRef = doc(db, "habits", habitDoc.id);
-      const habitData = habitDoc.data();
+      const habitData = habitDoc.data() as Habit;
 
-      // Dodanie nowego dnia do tablicy data, jeśli jeszcze go tam nie ma
-      const updatedData = habitData.data.map(
-        (day: { day: string; done: number }) =>
-          day.day === currentDate ? day : { ...day },
-      );
+      const habitStartDate = new Date(habitData.date);
+      const updatedData = [...habitData.data];
 
-      if (
-        !updatedData.some((day: { day: string }) => day.day === currentDate)
+      for (
+        let date = new Date(habitStartDate);
+        date <= today;
+        date.setDate(date.getDate() + 1)
       ) {
-        updatedData.push({ day: currentDate, done: 0, presentCount: 0 });
+        const dateStr = date.toISOString().split("T")[0];
+
+        if (!updatedData.some((day) => day.day === dateStr)) {
+          updatedData.push({ day: dateStr, done: 0, presentCount: 0 });
+        }
       }
 
-      // Zaktualizowanie dokumentu w Firestore
+      updatedData.sort((a, b) => {
+        const dateA = new Date(a.day).getTime();
+        const dateB = new Date(b.day).getTime();
+        return dateA - dateB;
+      });
+
       await updateDoc(habitRef, {
         data: updatedData,
+      });
+
+      dispatch({
+        type: "UPDATE_HABIT_DATA",
+        payload: { id: habitDoc.id, data: updatedData },
       });
     }
   } catch (error) {
@@ -113,4 +125,3 @@ export const addNewDayIfNecessary = async () => {
   }
 };
 
-addNewDayIfNecessary();
