@@ -1,5 +1,5 @@
 // types.ts
-interface DataEntry {
+export interface DataEntry {
   day: string;
   done: number;
   presentCount: number;

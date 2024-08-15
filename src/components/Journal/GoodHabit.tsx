@@ -83,7 +83,7 @@ export default function BadHabit() {
     if (validateForm()) {
       const countValue = parseInt(formState.goal.split(" ")[0]) || 1;
       const newHabit: Habit = {
-        id: uuidv4(),
+        id: uuidv4().slice(0, 8),
         ...formState,
         count: countValue,
         data: [
@@ -198,7 +198,6 @@ export default function BadHabit() {
                   </option>
                   <option value="day">For day</option>
                   <option value="week">For week</option>
-                  <option value="month">For month</option>
                 </select>
               </div>
             </div>

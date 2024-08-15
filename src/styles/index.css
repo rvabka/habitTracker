@@ -103,3 +103,58 @@ input[type="time"]::before {
 .fade-out {
   opacity: 0;
 }
+
+.react-calendar {
+  max-width: 600px;
+  max-height: 600px;
+  margin: auto;
+  padding: 1rem;
+  border: 1px solid #2d2d2d;
+  border-radius: 10px;
+}
+
+.react-calendar__tile {
+  border-radius: 100%;
+  font-size: 1rem;
+  font-weight: 200;
+  width: 0.6rem;
+  height: 2.8rem;
+  text-align: center;
+}
+
+.react-calendar__navigation__arrow {
+  padding: 1.5rem;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+}
+
+.react-calendar__navigation__arrow:hover {
+  padding: 1.5rem;
+  color: #72d7f0;
+  transform: scale(1.05);
+}
+
+.react-calendar__navigation__label__labelText,
+.react-calendar__navigation__label__labelText--from {
+  font-size: 1.1rem;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: auto;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  border: none;
+  text-decoration: none;
+  background: none;
+  box-shadow: none;
+  text-align: center;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  text-align: center;
+}

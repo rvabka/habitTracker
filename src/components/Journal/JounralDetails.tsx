@@ -9,7 +9,9 @@ import {
   updateCountInFirestore,
   updateDoneStatus,
   getHabitsFromFirestore,
+  addNewDayIfNecessary,
 } from "../../firebase/firebase";
+import { Link } from "react-router-dom";
 
 export default function JournalDetails() {
   const [searchData] = useSearchParams();
@@ -18,7 +20,6 @@ export default function JournalDetails() {
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const { width, height } = useWindowSize();
 
-  console.log(habitArray);
   const filteredHabits = habitArray.filter((item) => {
     const presentData = searchData.get("date") || new Date();
     const dateObj1 = new Date(presentData);
@@ -38,6 +39,7 @@ export default function JournalDetails() {
 
   useEffect(() => {
     const loadHabits = async () => {
+      addNewDayIfNecessary(dispatch);
       dispatch({ type: "SET_LOADING", payload: true });
       try {
         const habits = await getHabitsFromFirestore();
@@ -51,7 +53,8 @@ export default function JournalDetails() {
     loadHabits();
   }, [dispatch]);
 
-  const dateStr: string = searchData.get("date") || "";
+  const dateStr: string =
+    searchData.get("date") || new Date().toLocaleDateString("en-CA");
   let formattedDate: string = "";
   if (dateStr) {
     const date = new Date(dateStr);
@@ -137,7 +140,7 @@ export default function JournalDetails() {
           >
             <Confetti width={width} height={height} />
           </div>
-          <div className="w-full overflow-y-auto">
+          <div className="habitList w-full overflow-y-auto">
             {filteredHabits.length > 0 ? (
               filteredHabits.map((item, index: number) => {
                 const isComplete = item.data.some(
@@ -146,17 +149,17 @@ export default function JournalDetails() {
                 const todayEntry = item.data.find(
                   (entry) => entry.day === formattedDate,
                 );
-
                 return (
                   <div
                     key={item.id}
-                    className="flex w-full items-center justify-around border-y-[0.1rem] border-y-second p-2 py-4"
+                    className="habit flex w-full items-center justify-around border-y-[0.1rem] border-y-second p-2 py-4"
                   >
                     <div className="text-center text-lg">
                       <h1>{index + 1}</h1>
                     </div>
-                    <div
-                      className={`flex w-full flex-col items-center justify-center`}
+                    <Link
+                      to={item.id}
+                      className="flex w-4/5 flex-col items-center justify-center rounded-2xl p-1 transition-all duration-200 hover:bg-second"
                     >
                       <h1
                         className={`text-lg font-bold ${isComplete ? "italic line-through" : ""}`}
@@ -172,7 +175,7 @@ export default function JournalDetails() {
                             ? todayEntry.presentCount + " / " + item.count
                             : "Come back another day"}
                       </p>
-                    </div>
+                    </Link>
                     <div>
                       <button
                         className={`flex flex-col items-center justify-center rounded-full bg-second p-3 text-white transition duration-200 hover:scale-105 hover:text-babyBlue ${isComplete ? "cursor-not-allowed" : "cursor-pointer"}`}

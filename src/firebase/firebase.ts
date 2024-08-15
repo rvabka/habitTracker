@@ -124,4 +124,3 @@ export const addNewDayIfNecessary = async (
     console.error("Error adding new day: ", error);
   }
 };
-
