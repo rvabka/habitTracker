@@ -167,7 +167,7 @@ export default function JournalDetails() {
                         {item.name}
                       </h1>
                       <p
-                        className={`font-thin ${isComplete ? "text-green-500" : "text-red-500"} `}
+                        className={`${isComplete ? "text-green-500" : "text-red-500"} `}
                       >
                         {isComplete
                           ? "Habit completed for today"

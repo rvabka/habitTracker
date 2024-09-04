@@ -13,7 +13,7 @@ const activeStyles = {
 export default function Footer() {
   return (
     <footer className="bg-main fixed bottom-0 w-full p-2">
-      <nav className="flex h-full items-center justify-center gap-6 text-base sm:text-sm sm:gap-4">
+      <nav className="flex h-full items-center justify-center gap-6 text-base sm:gap-4 sm:text-sm">
         <NavLink
           className="flex flex-col-reverse items-center p-1 transition duration-300 hover:text-white"
           to="/"

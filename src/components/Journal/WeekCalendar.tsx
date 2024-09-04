@@ -50,7 +50,7 @@ export default function WeekCalendar() {
   };
 
   return (
-    <div className="week-calendar absolute bottom-[4.4rem] flex w-full flex-col items-center justify-center bg-second p-4 text-white sm:p-2 sm:text-sm">
+    <div className="week-calendar absolute bottom-[6rem] flex w-full flex-col items-center justify-center bg-second p-4 text-white sm:p-2 sm:text-sm">
       <div className="week-header text-md mb-4 flex gap-3 sm:gap-2">
         {daysOfWeek.map((day, index) => {
           const isToday: boolean =
@@ -74,13 +74,13 @@ export default function WeekCalendar() {
       </div>
       <div className="flex w-full items-center justify-center gap-3 sm:flex sm:gap-2">
         <button
-          className="w-1/2 rounded-lg border p-2 transition duration-200 hover:scale-105 hover:text-babyBlue sm:m-0"
+          className="w-[200px] rounded-lg border p-2 transition duration-200 hover:scale-105 hover:text-babyBlue sm:m-0"
           onClick={handlePreviousWeek}
         >
           Prev Week
         </button>
         <button
-          className="w-1/2 rounded-lg border p-2 transition duration-200 hover:scale-105 hover:text-babyBlue sm:m-0"
+          className="w-[200px] rounded-lg border p-2 transition duration-200 hover:scale-105 hover:text-babyBlue sm:m-0"
           onClick={handleNextWeek}
         >
           Next Week

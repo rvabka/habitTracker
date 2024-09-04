@@ -62,7 +62,7 @@ export default function Journal() {
           <GoodHabbit />
         </div>
       </div>
-      <div className="flex items-center flex-col h-[65%] w-full bg-first p-5">
+      <div className="flex h-[65%] w-full flex-col items-center bg-first p-5">
         <JournalDetails />
       </div>
       <WeekCalendar />

@@ -2,13 +2,14 @@ import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { HabitContext } from "../context/HabitContext";
 import Calendar from "react-calendar";
-import { Habit } from "../context/types";
+import { DataEntry, Habit } from "../context/types";
+import { FaFire } from "react-icons/fa";
 
 export default function HabitDetails() {
   const habitContext = useContext(HabitContext);
   const habitArray = habitContext?.state.habits || [];
   const location = useLocation();
-  const [value, setValue] = useState<Date>(new Date());
+  const [value] = useState<Date>(new Date());
 
   const habitId = location.pathname.slice(1);
   const filteredArray: Habit | undefined = habitArray.find(
@@ -30,18 +31,58 @@ export default function HabitDetails() {
     return null;
   };
 
+  const longestStreak = (data: DataEntry[] = []): number => {
+    let maxStreak = 0;
+    let currentStreak = 0;
+
+    data.forEach((element) => {
+      if (element.done === 1) {
+        currentStreak++;
+        if (currentStreak > maxStreak) {
+          maxStreak = currentStreak;
+        }
+      } else {
+        currentStreak = 0;
+      }
+    });
+    return maxStreak;
+  };
+
+  // const lostDays = (data: DataEntry[] = []): number => {
+  //   let lostDays = 0;
+
+  //   data.forEach(element => {
+  //     if(element.done === 0)
+  //   })
+  // }
+
+  console.log(new Date().getDate());
+
   return (
     <div>
       {filteredArray ? (
-        <div>
-          <h1 className="p-4 text-2xl font-bold">{filteredArray.name}</h1>
-          {/* Możesz dodać więcej informacji o habit tutaj */}
+        <div className="top">
+          <div className="my-2 flex items-center justify-center p-2 text-2xl">
+            <h1 className="top-title rounded-xl text-center font-bold">
+              {filteredArray.name.slice(0, -2)}
+            </h1>
+            <span className="">{filteredArray.name.slice(-2)}</span>
+          </div>
+          <div className="top__streak mb-2 flex items-center border border-second p-2 text-xl">
+            <div className="top__streak-icon ml-2">
+              <FaFire color="#ff9100" size={35} />
+            </div>
+            <div className="ml-3 font-bold">
+              <p>Obecna seria: </p>
+              <h2>{longestStreak(filteredArray?.data)} dni</h2>
+            </div>
+          </div>
         </div>
       ) : (
         <p>Habit not found</p>
       )}
       <Calendar
-        onChange={setValue}
+        // onChange={setValue}
         value={value}
         tileClassName={tileClassName}
         calendarType={"iso8601"}
