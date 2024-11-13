@@ -4,11 +4,11 @@ import PageTransitionWrapper from "./framerMotion/PageTransitionWrapper";
 
 export default function Layout() {
   return (
-    <main className="relative flex items-center justify-center text-fontColor">
+    <main className="flex h-screen text-white">
+      <Footer />
       <PageTransitionWrapper>
         <Outlet />
       </PageTransitionWrapper>
-      <Footer />
     </main>
   );
 }

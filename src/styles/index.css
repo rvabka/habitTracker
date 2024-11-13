@@ -12,10 +12,11 @@
 }
 
 body {
+  display: flex;
   width: 100%;
   min-height: 100vh;
   position: relative;
-  background-color: #111111;
+  background-color: #1D1C2B;
   overflow-x: hidden;
 }
 

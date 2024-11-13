@@ -73,7 +73,7 @@ export default function HabitDetails() {
               <FaFire color="#ff9100" size={35} />
             </div>
             <div className="ml-3 font-bold">
-              <p>Obecna seria: </p>
+              <p>Najdłuższa seria: </p>
               <h2>{longestStreak(filteredArray?.data)} dni</h2>
             </div>
           </div>
@@ -90,3 +90,4 @@ export default function HabitDetails() {
     </div>
   );
 }
+

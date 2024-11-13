@@ -4,12 +4,12 @@ const icon = {
   hidden: {
     opacity: 0,
     pathLength: 0,
-    fill: "#72d7f0",
+    fill: "#7263B9",
   },
   visible: {
     opacity: 1,
     pathLength: 1,
-    fill: "#72d7f0",
+    fill: "#7263B9",
   },
 };
 
@@ -20,9 +20,11 @@ const Logo = () => (
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+      position: "absolute",
+      top: "25px",
       height: "50px",
       width: "50px",
-      backgroundColor: "#333",
+      backgroundColor: "#1E1C29",
       borderRadius: "10px",
     }}
   >
@@ -45,7 +47,7 @@ const Logo = () => (
           default: { duration: 2, ease: "easeInOut" },
         }}
         fill="none"
-        stroke="#72d7f0"
+        stroke="#7263B9"
         strokeWidth="3"
         rx="5"
       />
@@ -61,7 +63,7 @@ const Logo = () => (
           default: { duration: 2, ease: "easeInOut" },
         }}
         fill="none"
-        stroke="#72d7f0"
+        stroke="#7263B9"
         strokeWidth="3"
         rx="5"
       />
@@ -77,7 +79,7 @@ const Logo = () => (
           default: { duration: 2, ease: "easeInOut" },
         }}
         fill="none"
-        stroke="#72d7f0"
+        stroke="#7263B9"
         strokeWidth="3"
         rx="5"
       />

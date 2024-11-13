@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
 import BadHabbit from "./BadHabit";
 import GoodHabbit from "./GoodHabit";
-import WeekCalendar from "./WeekCalendar";
 import JournalDetails from "./JounralDetails";
+import WeekCalendar from "./WeekCalendar";
 
 export default function Journal() {
   const location = useLocation();
@@ -54,18 +54,18 @@ export default function Journal() {
   }
 
   return (
-    <div className="relative h-screen">
-      <div className="flex w-screen items-center justify-between border-b-[0.1rem] border-b-second p-5 pb-8">
+    <div className="2xl:w-[30vw] relative ml-4 mt-2 w-[50vw] rounded-3xl bg-first p-5 shadow-[11px_-5px_31px_-12px_rgba(0,_0,_0,_0.35)]">
+      <div className="flex w-full items-center justify-between border-b-[0.1rem] border-b-first p-5 pb-8">
         <h1 className="text-2xl">{getStringFromDate()}</h1>
         <div className="flex gap-2">
           <BadHabbit />
           <GoodHabbit />
         </div>
       </div>
-      <div className="flex h-[65%] w-full flex-col items-center bg-first p-5">
+      <div className="flex h-[65%] w-full flex-col items-center">
         <JournalDetails />
+        <WeekCalendar />
       </div>
-      <WeekCalendar />
     </div>
   );
 }

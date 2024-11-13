@@ -10,7 +10,7 @@ export interface Habit {
   count: number;
   name: string;
   date: string;
-  reminder: string;
+  color: string;
   goal: string;
   data: DataEntry[];
 }
