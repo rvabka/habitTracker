@@ -134,7 +134,7 @@ export default function JournalDetails() {
           />
         </div>
       ) : (
-        <div className="habitList w-full overflow-y-auto rounded-3xl bg-babyBlue p-6">
+        <div className="habitList h-[400px] w-full overflow-y-auto rounded-3xl bg-babyBlue p-6">
           <div
             className={`confetti-container ${showConfetti ? "fade-in" : "fade-out"}`}
           >
@@ -151,7 +151,7 @@ export default function JournalDetails() {
               return (
                 <div
                   key={item.id}
-                  className="habit mb-2 flex w-full items-center justify-around border-b-[0.1rem] border-b-first p-2 py-4"
+                  className="habit mb-2 flex w-full items-center justify-around border-b-[0.1rem] border-b-first py-3"
                 >
                   <div className="flex items-center text-center text-lg">
                     <h1>{index + 1}</h1>
@@ -166,7 +166,7 @@ export default function JournalDetails() {
 
                   <Link
                     to={item.id}
-                    className="bg-backgroundButton hover:bg-buttonHover mx-2 flex w-4/5 flex-col items-center justify-center rounded-2xl p-1 shadow-xl transition-all duration-200"
+                    className="mx-2 flex w-4/5 flex-col items-center justify-center rounded-2xl bg-backgroundButton p-1 shadow-xl transition-all duration-200 hover:bg-buttonHover"
                   >
                     <h1
                       className={`text-lg font-bold ${isComplete ? "italic line-through" : ""}`}

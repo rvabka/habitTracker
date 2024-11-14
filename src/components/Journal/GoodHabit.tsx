@@ -8,7 +8,7 @@ import { HabitContext } from "../context/HabitContext";
 import { Habit } from "../context/types";
 import HabitForm from "./HabitForm";
 
-export default function BadHabit() {
+export default function GoodHabit() {
   const initialFormState = {
     name: "",
     date: "",

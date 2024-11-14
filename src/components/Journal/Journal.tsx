@@ -9,60 +9,46 @@ export default function Journal() {
   const searchParams = new URLSearchParams(location.search);
   const myParam = searchParams.get("date") || "";
 
-  function getStringFromDate(): string | undefined {
-    switch (calculateCurrentDate()) {
-      case "2":
-        return "Tomorrow";
-      case "1":
-        return "Today";
-      case "0":
-        return "Yesterday";
-      case "-1":
-        return "Day before yesterday";
-      default:
-        return calculateCurrentDate();
-    }
-  }
-
-  function formatDate(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = {
+  const formatDate = (date: Date): string => {
+    return date.toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
       year: "numeric",
+    });
+  };
+
+  const getRelativeDay = (diff: number): string => {
+    const days: Record<number, string> = {
+      2: "Tomorrow",
+      1: "Today",
+      0: "Yesterday",
+      [-1]: "Day before yesterday",
     };
-    return date.toLocaleDateString("en-GB", options);
-  }
+    return days[diff] || "";
+  };
 
-  function calculateCurrentDate(): string {
-    const currentDate: Date = new Date();
-    const callendarDate: Date | string =
-      myParam != "" ? new Date(myParam) : currentDate;
-    const stripedCallendarDate: Date =
-      callendarDate instanceof Date ? callendarDate : currentDate;
+  const getStringFromDate = (): string => {
+    const currentDate = new Date();
+    const targetDate = myParam ? new Date(myParam) : currentDate;
 
-    const time1: number = currentDate.getTime();
-    const time2: number = stripedCallendarDate.getTime();
+    const dayDiff = Math.ceil(
+      (targetDate.getTime() - currentDate.getTime()) / (24 * 60 * 60 * 1000) +
+        1,
+    );
 
-    const timeDifference: number = time2 - time1;
-    const millisecondsInOneDay: number = 24 * 60 * 60 * 1000;
-    const dayDifference: string = Math.ceil(
-      timeDifference / millisecondsInOneDay + 1,
-    ).toString();
-    return parseInt(dayDifference) >= -1 && parseInt(dayDifference) <= 2
-      ? dayDifference
-      : formatDate(stripedCallendarDate);
-  }
+    return getRelativeDay(dayDiff) || formatDate(targetDate);
+  };
 
   return (
-    <div className="2xl:w-[30vw] relative ml-4 mt-2 w-[50vw] rounded-3xl bg-first p-5 shadow-[11px_-5px_31px_-12px_rgba(0,_0,_0,_0.35)]">
-      <div className="flex w-full items-center justify-between border-b-[0.1rem] border-b-first p-5 pb-8">
+    <div className="relative h-full rounded-3xl bg-first p-5 shadow-[11px_-5px_31px_-12px_rgba(0,_0,_0,_0.35)]">
+      <div className="flex items-center justify-between border-b-[0.1rem] border-b-first pb-3">
         <h1 className="text-2xl">{getStringFromDate()}</h1>
         <div className="flex gap-2">
           <BadHabbit />
           <GoodHabbit />
         </div>
       </div>
-      <div className="flex h-[65%] w-full flex-col items-center">
+      <div className="flex w-full flex-col items-center">
         <JournalDetails />
         <WeekCalendar />
       </div>
