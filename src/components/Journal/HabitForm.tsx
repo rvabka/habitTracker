@@ -1,10 +1,10 @@
-import { useContext, useState } from "react";
+import { Habit } from "../context/types";
+import { useHabitContext } from "../context/HabitContext";
+import { useState } from "react";
 import {
   addHabitToFirestore,
   addNewDayIfNecessary,
 } from "../../firebase/firebase";
-import { Habit } from "../context/types";
-import { HabitContext } from "../context/HabitContext";
 import { v4 as uuidv4 } from "uuid";
 
 interface HabitFormProps {
@@ -22,11 +22,7 @@ const HabitForm: React.FC<HabitFormProps> = ({
   const [formState, setFormState] =
     useState<Omit<Habit, "id">>(initialFormState);
 
-  const habitContext = useContext(HabitContext);
-
-  if (!habitContext) {
-    throw new Error("HabitForm must be used within a HabitProvider");
-  }
+  const habitContext = useHabitContext();
   const { dispatch } = habitContext;
 
   const addHabit = async () => {
@@ -103,7 +99,7 @@ const HabitForm: React.FC<HabitFormProps> = ({
         </label>
         <select
           name="name"
-          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-white focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-white dark:placeholder-second dark:focus:border-babyBlue"
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-first focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-first dark:placeholder-first dark:focus:border-babyBlue"
           value={formState.name}
           onChange={handleInputChange}
         >
@@ -125,7 +121,7 @@ const HabitForm: React.FC<HabitFormProps> = ({
         <input
           type="date"
           name="date"
-          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-white focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-white dark:placeholder-white dark:focus:border-babyBlue"
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-first placeholder-gray-500 focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-first dark:placeholder-gray-400 dark:focus:border-babyBlue"
           placeholder="Start date"
           value={formState.date}
           onChange={handleInputChange}
@@ -149,7 +145,7 @@ const HabitForm: React.FC<HabitFormProps> = ({
           </div>
           <div className="flex w-full items-center justify-center gap-3">
             <input
-              className="block w-1/2 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-white focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-white dark:placeholder-white dark:focus:border-babyBlue"
+              className="block w-1/2 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-first focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-first dark:placeholder-first dark:focus:border-babyBlue"
               type="number"
               name="goal"
               placeholder="Goal"
@@ -157,7 +153,7 @@ const HabitForm: React.FC<HabitFormProps> = ({
               onChange={handleInputChange}
             />
             <select
-              className="block w-1/2 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-white focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-white dark:placeholder-white dark:focus:border-babyBlue"
+              className="block w-1/2 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-first focus:border-babyBlue focus:ring-babyBlue dark:border-gray-600 dark:bg-first dark:text-first dark:placeholder-first dark:focus:border-babyBlue"
               name="goalUnit"
               value={formState.goal.split(" ")[1] || ""}
               onChange={handleInputChange}

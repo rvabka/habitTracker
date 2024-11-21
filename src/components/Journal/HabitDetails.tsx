@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useHabit } from "../context/HabitContext";
@@ -16,18 +17,33 @@ export default function HabitDetails() {
   const [startedProgress, setStartedProgress] = useState<number | undefined>(0);
   const dateFromParams = date ? new Date(date) : new Date();
 
+  const isSameDay = (date1: Date, date2: Date): boolean => {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  };
+
+  const findToday = (data: DataEntry[] = []): number => {
+    return data.findIndex((entry) => {
+      const date1 = new Date(entry.day);
+      return isSameDay(date1, dateFromParams);
+    });
+  };
+
   useEffect(() => {
     const timer = setInterval(() => {
       setStartedProgress((prevProgress) =>
         prevProgress! + 1 <=
-        (filteredArray?.data?.[filteredArray.data.length - 1]?.presentCount ??
+        (filteredArray?.data?.[findToday(filteredArray?.data)]?.presentCount ??
           0)
           ? prevProgress! + 1
-          : filteredArray?.data[filteredArray?.data.length - 1].presentCount,
+          : filteredArray?.data[findToday(filteredArray?.data)].presentCount,
       );
     }, 200);
     return () => clearInterval(timer);
-  }, [filteredArray?.data]);
+  }, []);
 
   const longestStreak = (data: DataEntry[] = []): number => {
     let maxStreak = 0;
@@ -61,14 +77,6 @@ export default function HabitDetails() {
   const progressPercentage = filteredArray?.count
     ? Math.round(((startedProgress ?? 0) / filteredArray.count) * 100)
     : 0;
-
-  const isSameDay = (date1: Date, date2: Date): boolean => {
-    return (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    );
-  };
 
   return (
     <div className="rounded-xl bg-first p-5">

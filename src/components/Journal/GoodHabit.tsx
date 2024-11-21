@@ -39,16 +39,16 @@ export default function GoodHabit() {
     <div>
       <button
         type="button"
-        className="flex flex-col items-center justify-center rounded-full bg-second p-3 text-white transition duration-200 hover:scale-105 hover:text-babyBlue"
+        className="flex flex-col items-center justify-center rounded-full bg-first p-3 text-white transition duration-200 hover:scale-105 hover:text-babyBlue"
         onClick={() => setOpen((o) => !o)}
       >
         <FaBrain size={30} />
       </button>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
-        <div className="relative -mt-20 flex w-full flex-col items-center justify-center overflow-hidden rounded-md bg-second p-5 shadow-md sm:w-80">
-          <h1 className="text-center text-green-600">Good Habit 😎</h1>
+        <div className="relative -mt-20 flex w-full flex-col items-center justify-center overflow-hidden rounded-md bg-first p-7 text-white shadow-md sm:w-80">
+          <h1 className="text-center text-xl text-green-600">Good Habit 😎</h1>
           <motion.button
-            className="pointer absolute right-1 top-1 text-white"
+            className="pointer absolute right-2 top-2 text-white"
             onClick={closeModal}
             initial={{ rotate: 0 }}
             whileHover={{ rotate: 180 }}

@@ -24,11 +24,13 @@ function Calendar({
         caption_label: "text-sm font-medium",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-[#262537] text-white rounded-full p-1 transition duration-300 hover:scale-105 hover:bg-[#5A4C8C] hover:text-white",
+          buttonVariants({ variant: "ghost" }),
+          "h-8 w-8 p-0 font-normal bg-[#262537] transition duration-300 hover:bg-[#3a3a52] hover:text-white",
         ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
+        nav_button_previous:
+          "absolute left-1 transition duration-300 hover:scale-105 ",
+        nav_button_next:
+          "absolute right-1 transition duration-300 hover:scale-105 ",
         table: "w-full border-collapse space-y-1",
         head_row: "flex",
         head_cell:
