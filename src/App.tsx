@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Journal />} />
-          <Route path="/:id" element={<HabitDetails />} />
+          <Route path=":date/:id" element={<HabitDetails />} />
           <Route path="progress" element={<Progress />} />
           <Route path="challanges" element={<Challanges />} />
           <Route path="settings" element={<Settings />} />

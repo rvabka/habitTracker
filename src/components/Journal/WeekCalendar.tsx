@@ -1,20 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function WeekCalendar() {
-  // const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
   const [slideDirection, setSlideDirection] = useState<number>(0);
+
+  // setting searchParams on current day if not set yey
+  useEffect(() => {
+    if (!searchParams.get("date")) {
+      setSearchParams({ date: new Date().toDateString() });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const clickedDate: string | null = searchParams.get("date");
   const clickedDateDate: Date | null = clickedDate
     ? new Date(clickedDate)
     : null;
 
-  const today = new Date();
-  const currentDateFromParams = new Date(searchParams.get("date") || today);
+  const currentDateFromParams = new Date(
+    searchParams.get("date") || new Date(),
+  );
 
   const getStartOfWeek = (date: Date): Date => {
     const startOfWeek = new Date(date);
@@ -40,9 +48,11 @@ export default function WeekCalendar() {
       return day;
     });
 
-    checkIfIsToday(weekDays)
-      ? setSearchParams({ date: today.toDateString() })
-      : setSearchParams({ date: newStartOfWeek.toDateString() });
+    setSearchParams({
+      date: checkIfIsToday(weekDays)
+        ? new Date().toDateString()
+        : newStartOfWeek.toDateString(),
+    });
   };
 
   const daysOfWeek = Array.from({ length: 7 }, (_, index) => {
@@ -54,15 +64,13 @@ export default function WeekCalendar() {
   const checkIfIsToday = (dates: Date[]): boolean =>
     dates.some(
       (item: Date) =>
-        item.getFullYear() === today.getFullYear() &&
-        item.getMonth() === today.getMonth() &&
-        item.getDate() === today.getDate(),
+        item.getFullYear() === new Date().getFullYear() &&
+        item.getMonth() === new Date().getMonth() &&
+        item.getDate() === new Date().getDate(),
     );
 
   const handleClick = (day: Date) => {
-    const newPrams = new URLSearchParams();
-    newPrams.append("date", day.toDateString());
-    setSearchParams(newPrams);
+    setSearchParams({ date: day.toDateString() });
   };
 
   const variants = {

@@ -1,13 +1,11 @@
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import BadHabbit from "./BadHabit";
 import GoodHabbit from "./GoodHabit";
 import JournalDetails from "./JounralDetails";
 import WeekCalendar from "./WeekCalendar";
 
 export default function Journal() {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const myParam = searchParams.get("date") || "";
+  const { date } = useParams();
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-GB", {
@@ -29,7 +27,7 @@ export default function Journal() {
 
   const getStringFromDate = (): string => {
     const currentDate = new Date();
-    const targetDate = myParam ? new Date(myParam) : currentDate;
+    const targetDate = date ? new Date(date) : currentDate;
 
     const dayDiff = Math.ceil(
       (targetDate.getTime() - currentDate.getTime()) / (24 * 60 * 60 * 1000) +
