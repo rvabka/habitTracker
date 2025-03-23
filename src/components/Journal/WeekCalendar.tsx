@@ -103,7 +103,7 @@ export default function WeekCalendar() {
               duration: 0.3,
               ease: "easeInOut",
             }}
-            className="mb-6 grid grid-cols-7"
+            className="mb-6 grid grid-cols-7 gap-8 sm:gap-2"
           >
             {daysOfWeek.map((day, index) => {
               const isToday =
@@ -122,11 +122,11 @@ export default function WeekCalendar() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="flex flex-col items-center"
+                  className="flex w-full flex-1 flex-col items-center"
                 >
                   <button
                     onClick={() => handleClick(day)}
-                    className={`flex h-16 w-16 flex-col items-center justify-center rounded-xl shadow-lg transition-all duration-300 ${
+                    className={`flex h-14 w-14 flex-col items-center justify-center rounded-xl shadow-lg transition-all duration-300 sm:h-16 sm:w-16 ${
                       isToday
                         ? "bg-green-500 text-white shadow-lg"
                         : clickedDay
@@ -136,6 +136,7 @@ export default function WeekCalendar() {
                   >
                     <span className="text-sm font-medium opacity-75">
                       {currentDayFormat.split(",")[0]}
+                      <br />
                     </span>
                     <span className="text-sm font-bold">
                       {currentDayFormat.split(",")[1]}
